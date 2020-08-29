@@ -10,7 +10,7 @@ def loadWords():
     inFile = open(WORDLIST, 'r')
     line = inFile.readline()
     wordlist = line.split()
-    print("  ", len(wordlist), "words loaded.")
+    # print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 #function to return a random word
@@ -51,6 +51,27 @@ def AvailableLetters(gussedletter):
         ans.remove(i)
     return ''.join(ans)
 
+def randomD(hiddenword):
+
+
+    # randomizes the word chosen for game
+    index = random.randint(0, len(hiddenword) - 1)
+
+    # assigns radomized word to variable
+
+    displaylist = []
+    x = hiddenword[index]
+    for _ in range(len(hiddenword)):
+        displaylist.append("_")
+
+    for i in range(len(hiddenword)):
+        if x == hiddenword[i]:
+            displaylist[i] = x
+
+
+    return ''.join(displaylist)
+
+
 
 #main function
 
@@ -61,33 +82,65 @@ def main(hideword):
     guessedletter = []
     chancesleft = 0
 
+    # at intial few letter revealed
+    w  = randomD(hideword)
+    print("here given:",w)
+    l = [c for c in w]
+    i = 0
+
+    # add already revealed letter to guessedletter
+    while i<len(l):
+        if(l[i]!='_'):
+            guessedletter.append(l[i])
+            i = i+1
+        i = i+1
+    # print(guessedletter)
+    # remove guessedletter from availableletters
+    g = list(set(guessedletter))
+    print("Available letters:", AvailableLetters(g))
 
     while 10 - chancesleft > 0:
-
+        # print(guessedletter)
+        # print(hideword)
         if guessword(hideword,guessedletter):
             print("-------------------")
             print("congratulations,you won")
             break
 
         else:
+
             print("*****************")
             print("You have", 10 - chancesleft, "guesses left.")
-            print("Available letters:", AvailableLetters(guessedletter))
+            g1 = list(set(guessedletter))
+            print("Available letters:", AvailableLetters(g1))
             guess=(input("please guess a letter")).lower()
 
             if guess in guessedletter:
                 print("Already guessed that letter",correctwordguessed(hideword,guessedletter))
 
-            elif guess in hideword and guess not in guessedletter:
-                guessedletter.append(guess)
+            elif guess in hideword:
+                c = 0
+                for i in hideword:
+                    if i == guess:
+                        c = c + 1
+                while c>0:
+                    guessedletter.append(guess)
+                    c = c - 1
                 print("Good guess:",correctwordguessed(hideword,guessedletter))
 
             else:
-                guessedletter.append(guess)
+                c = 0
+                for i in hideword:
+                    if i == guess:
+                        c = c + 1
+                while c > 0:
+                    guessedletter.append(guess)
+                    c = c - 1
+                # guessedletter.append(guess)
                 chancesleft += 1
                 print("Letter not in hidden word",correctwordguessed(hideword,guessedletter))
 
-        if 8 - chancesleft == 0:
+        if 10 - chancesleft == 0:
             print("-------------")
             print("Sorry, you ran out of guesses. The word was else.", hideword)
             break
@@ -103,5 +156,29 @@ main(hideword)
 
 
 
+
+
+# import random
+# def randomD(hiddenword):
+#
+#
+#     # randomizes the word chosen for game
+#     index = random.randint(0, len(hiddenword) - 1)
+#
+#     # assigns radomized word to variable
+#
+#     displaylist = []
+#     x = hiddenword[index]
+#     for _ in range(len(hiddenword)):
+#         displaylist.append("_")
+#
+#     for i in range(len(hiddenword)):
+#         if x == hiddenword[i]:
+#             displaylist[i] = x
+#
+#
+#     print(''.join(displaylist))
+#
+# randomD("hello")
 
 
